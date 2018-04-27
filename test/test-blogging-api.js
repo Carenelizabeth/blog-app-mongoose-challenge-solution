@@ -88,7 +88,7 @@ describe('Blog API interface', function(){
                     expect(singlePost.id).to.equal(post.id);
                     expect(singlePost.title).to.equal(post.title);
                     expect(singlePost.content).to.equal(post.content);
-                    //expect(singlePost.author).to.equal(post.author);
+                    expect(singlePost.author).to.contain(post.author.firstName);
                     //expect(singlePost.created).to.equal(post.created);
                 });
         });
