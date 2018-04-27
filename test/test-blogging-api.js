@@ -14,13 +14,13 @@ const {TEST_DATABASE_URL} = require('../config')
 chai.use(chaiHttp);
 
 function seedBlogData(){
-    console.info('seeding restaurant data')
+    console.info('seeding blog data')
     const seedData = [];
 
     for (let i=1; i<=10; i++){
-        seedData.push(generateSeedData());
+        seedData.push(generateBlogData());
     }
-    return Restaurant.insertMany(seedData);
+    return BlogPost.insertMany(seedData);
 }
 
 function generateBlogData(){
@@ -50,4 +50,20 @@ describe('Blog API interface', function(){
     after(function(){
         return closeServer();
     });
+
+    describe('Get endpoint', function(){
+        it('should return all existing blog posts', function(){
+            let res;
+            return chai.request(app)
+                .get('/posts')
+                .then(function(_res){
+                    res = _res;
+                    expect(res).to.have.status(200)
+                    expect(res.body).to.have.length.of.at.least(1);
+                    return BlogPost.count();
+            });
+        });
+
+
+    })
 });
