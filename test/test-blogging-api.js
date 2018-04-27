@@ -31,3 +31,9 @@ function generateBlogData(){
         created: faker.date.past()
     };
 }
+
+function tearDownDb() {
+    console.warn('Deleting database');
+    return mongoose.connection.dropDatabase();
+}
+
