@@ -52,18 +52,45 @@ describe('Blog API interface', function(){
     });
 
     describe('Get endpoint', function(){
+
         it('should return all existing blog posts', function(){
             let res;
             return chai.request(app)
                 .get('/posts')
                 .then(function(_res){
                     res = _res;
-                    expect(res).to.have.status(200)
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+                    expect(res.body).to.be.an('array');
                     expect(res.body).to.have.length.of.at.least(1);
-                    return BlogPost.count();
+                    return BlogPost.count()
+                .then(function(count){
+                    expect(res.body).to.have.lengthOf(count);
+                });
             });
         });
-
-
-    })
+        
+        it('should return correct post when called by id', function(){
+            let singlePost;
+            return chai.request(app)
+                .get('/posts')
+                .then(function(res){
+                    res.body.forEach(function(post){
+                        expect(post).to.be.an('object');
+                        expect(post).to.include.keys(
+                            'id', 'title', 'content', 'author', 'created'
+                        );
+                    });
+                    singlePost = res.body[0];
+                    return BlogPost.findById(singlePost.id);
+                })
+                .then(function(post){
+                    expect(singlePost.id).to.equal(post.id);
+                    expect(singlePost.title).to.equal(post.title);
+                    expect(singlePost.content).to.equal(post.content);
+                    //expect(singlePost.author).to.equal(post.author);
+                    //expect(singlePost.created).to.equal(post.created);
+                });
+        });
+    });
 });
