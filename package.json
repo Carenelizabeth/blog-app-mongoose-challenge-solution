@@ -5,7 +5,8 @@
   "repository": "https://github.com/Thinkful-Ed/blog-app-mongoose-challenge-solution",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha --exit"
   },
   "dependencies": {
     "chai": "^4.1.2",
@@ -20,5 +21,8 @@
     "node",
     "express"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^5.1.1"
+  }
 }

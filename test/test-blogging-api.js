@@ -37,3 +37,17 @@ function tearDownDb() {
     return mongoose.connection.dropDatabase();
 }
 
+describe('Blog API interface', function(){
+    before(function(){
+        return runServer(TEST_DATABASE_URL);
+    });
+    beforeEach(function(){
+        return seedBlogData();
+    });
+    afterEach(function(){
+        return tearDownDb();
+    });
+    after(function(){
+        return closeServer();
+    });
+});
