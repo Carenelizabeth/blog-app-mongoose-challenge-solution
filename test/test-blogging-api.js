@@ -27,8 +27,7 @@ function generateBlogData(){
     return {
         title: faker.lorem.words(),
         content: faker.lorem.paragraph(),
-        author: {firstName: faker.name.firstName(), lastName: faker.name.lastName()},
-        created: faker.date.past()
+        author: {firstName: faker.name.firstName(), lastName: faker.name.lastName()}
     };
 }
 
@@ -89,7 +88,7 @@ describe('Blog API interface', function(){
                     expect(singlePost.title).to.equal(post.title);
                     expect(singlePost.content).to.equal(post.content);
                     expect(singlePost.author).to.contain(post.author.firstName);
-                    //expect(singlePost.created).to.equal(post.created);
+                    expect(singlePost.created).to.equal(post.created);
                 });
         });
     });
@@ -98,20 +97,28 @@ describe('Blog API interface', function(){
         it('should add a new blog post', function(){
             const newPost = generateBlogData();
 
-        return chai.request(app)
-            .post('/posts')
-            .send(newPost)
-            .then(function(res){
-                expect(res).to.have.status(201);
-                expect(res).to.be.json;
-                expect(res.body).to.be.an('object');
-                expect(res.body).to.include.keys(
-                    'id', 'title', 'content', 'author', 'created'
-                );
-                expect(res.body.title).to.equal(newPost.title);
-                expect(res.body.content).to.equal(newPost.content);
-                expect(res.body.author).to.contain(newPost.author.firstName);
-            });
+            return chai.request(app)
+                .post('/posts')
+                .send(newPost)
+                .then(function(res){
+                    expect(res).to.have.status(201);
+                    expect(res).to.be.json;
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.include.keys(
+                        'id', 'title', 'content', 'author', 'created'
+                    );
+                    expect(res.body.title).to.equal(newPost.title);
+                    expect(res.body.content).to.equal(newPost.content);
+                    expect(res.body.author).to.contain(newPost.author.firstName);
+                    return BlogPost.findById(res.body.id);
+                })
+                .then(function(npost){
+                    expect(npost.title).to.equal(newPost.title);
+                    expect(npost.content).to.equal(newPost.content);
+                    expect(npost.author.firstName).to.equal(newPost.author.firstName);
+                    expect(npost.author.lastName).to.equal(newPost.author.lastName);
+                });
+                
         });
 
         it('should return an error if missing required fields', function(){
@@ -123,18 +130,30 @@ describe('Blog API interface', function(){
             return chai.request(app)
                 .post('/posts')
                 .send(testPost)
-                then(function(res){
+                .then(function(res){
                     expect(res).to.have.status(400);
             });
         });
     });
 
-    describe('PUT endpoint', function(){
+    /*describe('PUT endpoint', function(){
         it('should update fields', function(){
-            const updateData = {
+            const updatePost = {
                 title: faker.lorem.words,
                 content: faker.lorem.paragraph
             }
+
+            return BlogPost
+                .findOne()
+                .then(function(post){
+                    updatePost.id = post.id;
+
+                return chai.request(app)
+                    .put(`/posts/${updatePost.id}`)
+                    .send(updateData)
+            })
+            .then(function(res){
+            })
         })
-    });
+    });*/
 });
