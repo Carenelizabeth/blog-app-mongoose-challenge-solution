@@ -104,14 +104,37 @@ describe('Blog API interface', function(){
             .then(function(res){
                 expect(res).to.have.status(201);
                 expect(res).to.be.json;
-                expect(res.body).to.be.an('object')
+                expect(res.body).to.be.an('object');
                 expect(res.body).to.include.keys(
                     'id', 'title', 'content', 'author', 'created'
                 );
                 expect(res.body.title).to.equal(newPost.title);
                 expect(res.body.content).to.equal(newPost.content);
                 expect(res.body.author).to.contain(newPost.author.firstName);
-            })
+            });
+        });
+
+        it('should return an error if missing required fields', function(){
+            const testPost = {
+                title: faker.lorem.words,
+                content: faker.lorem.paragraph
+            };
+    
+            return chai.request(app)
+                .post('/posts')
+                .send(testPost)
+                then(function(res){
+                    expect(res).to.have.status(400);
+            });
+        });
+    });
+
+    describe('PUT endpoint', function(){
+        it('should update fields', function(){
+            const updateData = {
+                title: faker.lorem.words,
+                content: faker.lorem.paragraph
+            }
         })
-    })
+    });
 });
