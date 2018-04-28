@@ -93,4 +93,25 @@ describe('Blog API interface', function(){
                 });
         });
     });
+
+    describe('POST endpoint', function(){
+        it('should add a new blog post', function(){
+            const newPost = generateBlogData();
+
+        return chai.request(app)
+            .post('/posts')
+            .send(newPost)
+            .then(function(res){
+                expect(res).to.have.status(201);
+                expect(res).to.be.json;
+                expect(res.body).to.be.an('object')
+                expect(res.body).to.include.keys(
+                    'id', 'title', 'content', 'author', 'created'
+                );
+                expect(res.body.title).to.equal(newPost.title);
+                expect(res.body.content).to.equal(newPost.content);
+                expect(res.body.author).to.contain(newPost.author.firstName);
+            })
+        })
+    })
 });
