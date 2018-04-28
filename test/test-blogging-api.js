@@ -123,10 +123,9 @@ describe('Blog API interface', function(){
 
         it('should return an error if missing required fields', function(){
             const testPost = {
-                title: faker.lorem.words,
-                content: faker.lorem.paragraph
+                title: faker.lorem.words(),
+                content: faker.lorem.paragraph()
             };
-    
             return chai.request(app)
                 .post('/posts')
                 .send(testPost)
@@ -136,13 +135,12 @@ describe('Blog API interface', function(){
         });
     });
 
-    /*describe('PUT endpoint', function(){
+    describe('PUT endpoint', function(){
         it('should update fields', function(){
             const updatePost = {
-                title: faker.lorem.words,
-                content: faker.lorem.paragraph
-            }
-
+                title: faker.lorem.words(),
+                content: faker.lorem.paragraph()
+            };
             return BlogPost
                 .findOne()
                 .then(function(post){
@@ -150,10 +148,16 @@ describe('Blog API interface', function(){
 
                 return chai.request(app)
                     .put(`/posts/${updatePost.id}`)
-                    .send(updateData)
+                    .send(updatePost)
             })
             .then(function(res){
+                expect (res).to.have.status(204);
+                return BlogPost.findById(updatePost.id);
             })
-        })
-    });*/
+            .then(function(upost){
+                expect(upost.title).to.equal(updatePost.title);
+                expect(upost.content).to.equal(updatePost.content);
+            })
+        });
+    });
 });
