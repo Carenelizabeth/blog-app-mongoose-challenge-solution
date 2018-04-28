@@ -159,5 +159,27 @@ describe('Blog API interface', function(){
                 expect(upost.content).to.equal(updatePost.content);
             })
         });
+
+        describe('DELETE endpoint', function(){
+            it('should delete a post by id', function(){
+                const deletePost = {}
+
+                return BlogPost
+                    .findOne()
+                    .then(function(post){
+                        deletePost.id = post.id;
+                        console.log(deletePost);
+                    })
+                        return ChannelSplitterNode.request(app)
+                            .delete(`/posts/${deletePost.id}`)
+                    .then(function(res){
+                        expect(res).to.have.status(204);
+                        return BlogPost.findById(deletePost.id)
+                    })
+                    .then(function(dpost){
+                        expect(dpost).to.be.null;
+                    })
+            })
+        })
     });
 });
