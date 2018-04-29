@@ -121,6 +121,7 @@ describe('Blog API interface', function(){
                 
         });
 
+        //testing an edge case
         it('should return an error if missing required fields', function(){
             const testPost = {
                 title: faker.lorem.words(),
